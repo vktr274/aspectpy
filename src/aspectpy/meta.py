@@ -1,7 +1,6 @@
 from aspectpy.decorators import before, after_returning, after_throwing, around
 import re
-
-# from inspect import signature
+from inspect import get_annotations, getargs
 
 
 class Aspect(type):
@@ -35,7 +34,7 @@ class Aspect(type):
 
             if cls.around_regexp.match(attr_name):
                 attrs[attr_name] = around(
-                    stored_value.__annotations__.get("return", None) == int,
+                    cls.proceed,
                     cls.action,
                     "around",
                     4,
@@ -47,3 +46,13 @@ class Aspect(type):
     @staticmethod
     def action(arg1, arg2, arg3):
         print(f"Doing something {arg1} with args: '{arg2}' and '{arg3}'")
+        return 0.1
+
+    @staticmethod
+    def proceed(func):
+        args = getargs(func.__code__).args
+        return_type = get_annotations(func).get("return", None)
+        print(
+            f"Evaluating whether to proceeed with args: {args} and return type: {return_type}"
+        )
+        return return_type == str and "number" in args

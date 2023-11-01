@@ -53,7 +53,7 @@ def around(
             predicate = proceed
             if callable(predicate):
                 predicate = predicate(func)
-            if predicate:
+            if isinstance(predicate, bool) and predicate:
                 return func(*args, **kwargs)
             return around_action(*action_args, **action_kwargs)
 

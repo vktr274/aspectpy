@@ -69,36 +69,36 @@ class MyClass(metaclass=Aspect):
         return 1
 
     def test2(self):
-        print(f"TEST 2: Doing something else")
+        print(f"TEST 2: Doing something")
         return 2
 
     def test3(self):
-        print(f"TEST 3: Doing something else")
+        print(f"TEST 3: Doing something")
         return 3
 
     def test4(self):
-        print(f"TEST 4: Doing something else")
+        print(f"TEST 4: Doing something")
         return 4
 
     def test5(self):
-        print(f"TEST 5: Doing something else like throwing an exception")
+        print(f"TEST 5: Doing something like throwing an exception")
         raise Exception("Exception thrown")
 
     def test6(self):
-        print(f"TEST 6: Doing something else")
+        print(f"TEST 6: Doing something")
         return 6
 
     def test7(self):
-        print(f"TEST 7: Doing something else")
+        print(f"TEST 7: Doing something")
         return 7
 
-    def test8(self) -> str:
-        print(f"TEST 8 STR: Doing something else")
+    def test8(self, number) -> str:
+        print(f"TEST 8 STR: Doing something with arg: {number}")
         return "8"
 
-    def test_8(self) -> int:
-        print(f"TEST_8 INT: Doing something else")
-        return 8
+    def test_8(self) -> str:
+        print(f"TEST_8 INT: Doing something")
+        return "8"
 
 
 print("------------------------BEFORE------------------------")
@@ -148,7 +148,7 @@ print(f"Return value: {my_class.test4()}\n")
 print(f"Return value: {my_class.test5()}\n")
 print(f"Return value: {my_class.test6()}\n")
 print(f"Return value: {my_class.test7()}\n")
-print(f"Return value: {my_class.test8()}\n")
+print(f"Return value: {my_class.test8(4555)}\n")
 print(f"Return value: {my_class.test_8()}\n")
 
 print("------------------------END---------------------------")
