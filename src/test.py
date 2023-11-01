@@ -1,0 +1,154 @@
+from typing import Callable
+from aspectpy.decorators import before, after_returning, after_throwing, around
+from aspectpy.meta import Aspect
+
+
+def action(num: int, text: str | None = None):
+    print(f"{num}. action {text}")
+
+
+@before(action, 1, text="before")
+def test_before(test_text: str):
+    """
+    This docstring will be returned by test_before.__doc__
+    because of @wraps(func) used in aspectpy.py
+    """
+    print(f"Doing something {test_text} 1")
+    return test_text
+
+
+@after_returning(action, 2, text="after returning")
+def test_after_returning(test_text: str):
+    """
+    This docstring will be returned by test_after_returning.__doc__
+    because of @wraps(func) used in aspectpy.py
+    """
+    print(f"Doing something {test_text} 2")
+    return test_text
+
+
+@after_throwing(action, 3, text="after throwing")
+def test_after_throwing(test_text: str, throw: bool = True):
+    """
+    This docstring will be returned by test_after_throwing.__doc__
+    because of @wraps(func) used in aspectpy.py
+    """
+    print(f"Doing something {test_text} that might throw an exception")
+    if throw:
+        raise Exception("Exception thrown")
+    return test_text
+
+
+def proceed(func) -> bool:
+    print(f"Function {func.__name__} will not proceed")
+    return False
+
+
+def around_action(arg):
+    print(f"Function did not proceed, but around_action was called instead")
+    print(
+        f"Doing something with value {arg} which was passed to around_action as an argument called arg"
+    )
+
+    return "new return value"
+
+
+@around(proceed, around_action, 15)
+def test_around(test_text: str):
+    """
+    This docstring will be returned by test_around.__doc__
+    because of @wraps(func) used in aspectpy.py
+    """
+    print(f"Doing something {test_text} 4")
+    return test_text
+
+
+class MyClass(metaclass=Aspect):
+    def test1(self):
+        print(f"TEST 1: Doing something")
+        return 1
+
+    def test2(self):
+        print(f"TEST 2: Doing something else")
+        return 2
+
+    def test3(self):
+        print(f"TEST 3: Doing something else")
+        return 3
+
+    def test4(self):
+        print(f"TEST 4: Doing something else")
+        return 4
+
+    def test5(self):
+        print(f"TEST 5: Doing something else like throwing an exception")
+        raise Exception("Exception thrown")
+
+    def test6(self):
+        print(f"TEST 6: Doing something else")
+        return 6
+
+    def test7(self):
+        print(f"TEST 7: Doing something else")
+        return 7
+
+    def test8(self) -> str:
+        print(f"TEST 8 STR: Doing something else")
+        return "8"
+
+    def test_8(self) -> int:
+        print(f"TEST_8 INT: Doing something else")
+        return 8
+
+
+print("------------------------BEFORE------------------------")
+
+print(test_before("cool"))
+
+print(f"__name__: {test_before.__name__}")
+
+print(f"__doc__: {test_before.__doc__}\n")
+
+print("--------------------AFTER-RETURNING-------------------")
+
+print(f"Return value: {test_after_returning('cool')}")
+
+print(f"__name__: {test_after_returning.__name__}")
+
+print(f"__doc__: {test_after_returning.__doc__}\n")
+
+print("------------AFTER-THROWING-WITH-EXCEPTION-------------")
+
+print(f"Return value: {test_after_throwing('suspicious')}\n")
+
+print("----------AFTER-THROWING-WITHOUT-EXCEPTION------------")
+
+print(f"Return value: {test_after_throwing('suspicious', throw=False)}")
+
+print(f"__name__: {test_after_throwing.__name__}")
+
+print(f"__doc__: {test_after_throwing.__doc__}\n")
+
+print("------------------------AROUND------------------------")
+
+print(f"Return value: {test_around('cool')}")
+
+print(f"__name__: {test_around.__name__}")
+
+print(f"__doc__: {test_around.__doc__}\n")
+
+print("------------------------CLASS-------------------------")
+
+my_class = MyClass()
+
+print(f"Return value: {my_class.test1()}\n")
+print(f"Return value: {my_class.test2()}\n")
+print(f"Return value: {my_class.test3()}\n")
+print(f"Return value: {my_class.test4()}\n")
+print(f"Return value: {my_class.test5()}\n")
+print(f"Return value: {my_class.test6()}\n")
+print(f"Return value: {my_class.test7()}\n")
+print(f"Return value: {my_class.test8()}\n")
+print(f"Return value: {my_class.test_8()}\n")
+
+print("------------------------END---------------------------")

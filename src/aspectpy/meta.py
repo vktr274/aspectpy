@@ -1,0 +1,49 @@
+from aspectpy.decorators import before, after_returning, after_throwing, around
+import re
+
+# from inspect import signature
+
+
+class Aspect(type):
+    before_regexp = re.compile(r"^test[1-3]$")
+    after_returning_regexp = re.compile(r"^test[4-6]$")
+    after_throwing_regexp = re.compile(r"^test[5-7]$")
+    around_regexp = re.compile(r"^test[_]?8$")
+
+    def __new__(cls, name, bases, attrs):
+        # Modify the class using wrappers
+        for attr_name, attr_value in attrs.items():
+            stored_value = attr_value
+            if not callable(attr_value) or attr_name == "__init__":
+                continue
+
+            if cls.before_regexp.match(attr_name):
+                attrs[attr_name] = before(cls.action, "before", 1, 2)(stored_value)
+                stored_value = attrs[attr_name]
+
+            if cls.after_returning_regexp.match(attr_name):
+                attrs[attr_name] = after_returning(cls.action, "after returning", 2, 3)(
+                    stored_value
+                )
+                stored_value = attrs[attr_name]
+
+            if cls.after_throwing_regexp.match(attr_name):
+                attrs[attr_name] = after_throwing(cls.action, "after throwing", 3, 4)(
+                    stored_value
+                )
+                stored_value = attrs[attr_name]
+
+            if cls.around_regexp.match(attr_name):
+                attrs[attr_name] = around(
+                    stored_value.__annotations__.get("return", None) == int,
+                    cls.action,
+                    "around",
+                    4,
+                    5,
+                )(stored_value)
+                stored_value = attrs[attr_name]
+        return super().__new__(cls, name, bases, attrs)
+
+    @staticmethod
+    def action(arg1, arg2, arg3):
+        print(f"Doing something {arg1} with args: '{arg2}' and '{arg3}'")
