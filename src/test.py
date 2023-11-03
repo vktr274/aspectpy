@@ -1,5 +1,4 @@
-from typing import Callable
-from aspectpy.decorators import before, after_returning, after_throwing, around
+from aspectpy.decorators import Before, AfterReturning, AfterThrowing, Around
 from aspectpy.meta import Aspect
 
 
@@ -7,31 +6,31 @@ def action(num: int, text: str | None = None):
     print(f"{num}. action {text}")
 
 
-@before(action, 1, text="before")
+@Before(action, 1, text="before")
 def test_before(test_text: str):
     """
     This docstring will be returned by test_before.__doc__
-    because of @wraps(func) used in aspectpy.py
+    because of @wraps(func) used in decorators.py
     """
     print(f"Doing something {test_text} 1")
     return test_text
 
 
-@after_returning(action, 2, text="after returning")
+@AfterReturning(action, 2, text="after returning")
 def test_after_returning(test_text: str):
     """
     This docstring will be returned by test_after_returning.__doc__
-    because of @wraps(func) used in aspectpy.py
+    because of @wraps(func) used in decorators.py
     """
     print(f"Doing something {test_text} 2")
     return test_text
 
 
-@after_throwing(action, 3, text="after throwing")
+@AfterThrowing(action, 3, text="after throwing")
 def test_after_throwing(test_text: str, throw: bool = True):
     """
     This docstring will be returned by test_after_throwing.__doc__
-    because of @wraps(func) used in aspectpy.py
+    because of @wraps(func) used in decorators.py
     """
     print(f"Doing something {test_text} that might throw an exception")
     if throw:
@@ -53,11 +52,11 @@ def around_action(arg):
     return "new return value"
 
 
-@around(proceed, around_action, 15)
+@Around(proceed, around_action, 15)
 def test_around(test_text: str):
     """
     This docstring will be returned by test_around.__doc__
-    because of @wraps(func) used in aspectpy.py
+    because of @wraps(func) used in decorators.py
     """
     print(f"Doing something {test_text} 4")
     return test_text

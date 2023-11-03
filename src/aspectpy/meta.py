@@ -1,6 +1,6 @@
-from aspectpy.decorators import before, after_returning, after_throwing, around
-import re
+from aspectpy.decorators import Before, AfterReturning, AfterThrowing, Around
 from inspect import get_annotations, getargs
+import re
 
 
 class Aspect(type):
@@ -17,23 +17,23 @@ class Aspect(type):
                 continue
 
             if cls.before_regexp.match(attr_name):
-                attrs[attr_name] = before(cls.action, "before", 1, 2)(stored_value)
+                attrs[attr_name] = Before(cls.action, "before", 1, 2)(stored_value)
                 stored_value = attrs[attr_name]
 
             if cls.after_returning_regexp.match(attr_name):
-                attrs[attr_name] = after_returning(cls.action, "after returning", 2, 3)(
+                attrs[attr_name] = AfterReturning(cls.action, "after returning", 2, 3)(
                     stored_value
                 )
                 stored_value = attrs[attr_name]
 
             if cls.after_throwing_regexp.match(attr_name):
-                attrs[attr_name] = after_throwing(cls.action, "after throwing", 3, 4)(
+                attrs[attr_name] = AfterThrowing(cls.action, "after throwing", 3, 4)(
                     stored_value
                 )
                 stored_value = attrs[attr_name]
 
             if cls.around_regexp.match(attr_name):
-                attrs[attr_name] = around(
+                attrs[attr_name] = Around(
                     cls.proceed,
                     cls.action,
                     "around",
