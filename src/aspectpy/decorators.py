@@ -1,25 +1,25 @@
-from typing import Callable
+from typing import Callable, Type
 from functools import wraps
 
 
 class Before:
-    def __init__(self, action_before: Callable, *action_args, **action_kwargs):
-        self.action_before = action_before
+    def __init__(self, action: Callable, *action_args, **action_kwargs):
+        self.action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
     def __call__(self, func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            self.action_before(*self.action_args, **self.action_kwargs)
+            self.action(*self.action_args, **self.action_kwargs)
             return func(*args, **kwargs)
 
         return wrapper
 
 
 class AfterReturning:
-    def __init__(self, after_returning_action: Callable, *action_args, **action_kwargs):
-        self.after_returning_action = after_returning_action
+    def __init__(self, action: Callable, *action_args, **action_kwargs):
+        self.action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
@@ -27,15 +27,25 @@ class AfterReturning:
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
-            self.after_returning_action(*self.action_args, **self.action_kwargs)
+            self.action(*self.action_args, **self.action_kwargs)
             return result
 
         return wrapper
 
 
 class AfterThrowing:
-    def __init__(self, action_after_throwing: Callable, *action_args, **action_kwargs):
-        self.action_after_throwing = action_after_throwing
+    def __init__(
+        self,
+        action_and_exceptions: tuple[Callable, tuple[Type[Exception]]] | Callable,
+        *action_args,
+        **action_kwargs
+    ):
+        if callable(action_and_exceptions):
+            self.action = action_and_exceptions
+            self.exceptions = (Exception,)
+        else:
+            self.action = action_and_exceptions[0]
+            self.exceptions = action_and_exceptions[1]
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
@@ -44,8 +54,8 @@ class AfterThrowing:
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
-            except:
-                self.action_after_throwing(*self.action_args, **self.action_kwargs)
+            except self.exceptions:
+                self.action(*self.action_args, **self.action_kwargs)
 
         return wrapper
 
@@ -54,12 +64,12 @@ class Around:
     def __init__(
         self,
         proceed: bool | Callable[[Callable], bool],
-        around_action: Callable,
+        action: Callable,
         *action_args,
         **action_kwargs
     ):
         self.proceed = proceed
-        self.around_action = around_action
+        self.around_action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
