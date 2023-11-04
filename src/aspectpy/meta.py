@@ -9,39 +9,39 @@ class Aspect(type):
     after_throwing_regexp = re.compile(r"^test[5-7]$")
     around_regexp = re.compile(r"^test[_]?8$")
 
-    def __new__(cls, name, bases, attrs):
+    def __new__(cls, name, bases, namespace):
         # Modify the class using wrappers
-        for attr_name, attr_value in attrs.items():
+        for attr_name, attr_value in namespace.items():
             stored_value = attr_value
             if not callable(attr_value) or attr_name == "__init__":
                 continue
 
             if cls.before_regexp.match(attr_name):
-                attrs[attr_name] = Before(cls.action, "before", 1, 2)(stored_value)
-                stored_value = attrs[attr_name]
+                namespace[attr_name] = Before(cls.action, "before", 1, 2)(stored_value)
+                stored_value = namespace[attr_name]
 
             if cls.after_returning_regexp.match(attr_name):
-                attrs[attr_name] = AfterReturning(cls.action, "after returning", 2, 3)(
-                    stored_value
-                )
-                stored_value = attrs[attr_name]
+                namespace[attr_name] = AfterReturning(
+                    cls.action, "after returning", 2, 3
+                )(stored_value)
+                stored_value = namespace[attr_name]
 
             if cls.after_throwing_regexp.match(attr_name):
-                attrs[attr_name] = AfterThrowing(cls.action, "after throwing", 3, 4)(
-                    stored_value
-                )
-                stored_value = attrs[attr_name]
+                namespace[attr_name] = AfterThrowing(
+                    cls.action, "after throwing", 3, 4
+                )(stored_value)
+                stored_value = namespace[attr_name]
 
             if cls.around_regexp.match(attr_name):
-                attrs[attr_name] = Around(
+                namespace[attr_name] = Around(
                     cls.proceed,
                     cls.action,
                     "around",
                     4,
                     5,
                 )(stored_value)
-                stored_value = attrs[attr_name]
-        return super().__new__(cls, name, bases, attrs)
+                stored_value = namespace[attr_name]
+        return super().__new__(cls, name, bases, namespace)
 
     @staticmethod
     def action(arg1, arg2, arg3):
