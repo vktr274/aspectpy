@@ -76,10 +76,10 @@ class Around:
     def __call__(self, func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            predicate = self.proceed
-            if callable(predicate):
-                predicate = predicate(func)
-            if isinstance(predicate, bool) and predicate:
+            proceed = self.proceed
+            if callable(proceed):
+                proceed = proceed(func)
+            if isinstance(proceed, bool) and proceed:
                 return func(*args, **kwargs)
             return self.around_action(*self.action_args, **self.action_kwargs)
 
