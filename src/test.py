@@ -47,7 +47,7 @@ def proceed(func) -> bool:
 
 def around_action(arg):
     print(
-        f"AROUND_ACTION: Function did not proceed, but around_action was called instead"
+        "AROUND_ACTION: Function did not proceed, but around_action was called instead"
     )
     print(
         f"AROUND_ACTION: Doing something with value {arg} which was passed to around_action as an argument called arg"
@@ -68,27 +68,27 @@ def test_around(test_text: str):
 
 class MyClass(metaclass=Aspect):
     def test1(self):
-        print(f"TEST 1: Doing something")
+        print("TEST 1: Doing something")
         return 1
 
     def test2(self):
-        print(f"TEST 2: Doing something")
+        print("TEST 2: Doing something")
         return 2
 
     def test3(self):
-        print(f"TEST 3: Doing something")
+        print("TEST 3: Doing something")
         return 3
 
     def test4(self):
-        print(f"TEST 4: Doing something")
+        print("TEST 4: Doing something")
         return 4
 
     def test5(self):
-        print(f"TEST 5: Doing something")
+        print("TEST 5: Doing something")
         return 6
 
     def test6(self):
-        print(f"TEST 6: Doing something")
+        print("TEST 6: Doing something")
         return 7
 
     def test7(self, number) -> str:
@@ -96,15 +96,15 @@ class MyClass(metaclass=Aspect):
         return "8"
 
     def test_7(self) -> str:
-        print(f"TEST_7 INT: Doing something")
+        print("TEST_7 INT: Doing something")
         return "8"
 
     def test8(self):
-        print(f"TEST 8: Doing something like throwing a ValueError")
+        print("TEST 8: Doing something like throwing a ValueError")
         raise ValueError("ValueError thrown")
 
     def test9(self):
-        print(f"TEST 9: Doing something like throwing a ConnectionError")
+        print("TEST 9: Doing something like throwing a ConnectionError")
         raise ConnectionError("ConnectionError thrown")
 
 
