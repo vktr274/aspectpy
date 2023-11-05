@@ -25,6 +25,7 @@ class Payment(metaclass=ABCMeta):
         pass
 
 
+# Cannot be a subclass of OnlineCard due to Python's MRO
 class PayPal(Payment):
     def pay(self, amount: int):
         print(f"PayPal payment of {amount}$ processed.")
