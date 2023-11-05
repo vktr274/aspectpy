@@ -26,7 +26,7 @@ def test_after_returning(test_text: str):
     return test_text
 
 
-@AfterThrowing(action, 3, text="after throwing")
+@AfterThrowing(None, action, 3, text="after throwing")
 def test_after_throwing(test_text: str, throw: bool = True):
     """
     This docstring will be returned by test_after_throwing.__doc__

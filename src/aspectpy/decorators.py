@@ -11,6 +11,7 @@ class Before:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            print(f"BEFORE: {args} {kwargs}")
             self.action(*self.action_args, **self.action_kwargs)
             return func(*args, **kwargs)
 
@@ -26,6 +27,7 @@ class AfterReturning:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            print(f"AFTER RET: {args} {kwargs}")
             result = func(*args, **kwargs)
             self.action(*self.action_args, **self.action_kwargs)
             return result
@@ -36,23 +38,23 @@ class AfterReturning:
 class AfterThrowing:
     def __init__(
         self,
-        action_and_exceptions: tuple[Callable[..., Any], tuple[Type[Exception]]]
-        | Callable[..., Any],
+        exceptions: tuple[Type[Exception], ...] | Type[Exception] | None,
+        action: Callable[..., Any],
         *action_args,
-        **action_kwargs
+        **action_kwargs,
     ):
-        if callable(action_and_exceptions):
-            self.action = action_and_exceptions
+        self.action = action
+        if exceptions is None:
             self.exceptions = (Exception,)
-        else:
-            self.action = action_and_exceptions[0]
-            self.exceptions = action_and_exceptions[1]
+        elif not isinstance(exceptions, tuple):
+            self.exceptions = (exceptions,)
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            print(f"AFTER THROW: {args} {kwargs}")
             try:
                 return func(*args, **kwargs)
             except self.exceptions:
@@ -67,7 +69,7 @@ class Around:
         proceed: bool | Callable[[Callable[..., Any]], bool],
         action: Callable[..., Any],
         *action_args,
-        **action_kwargs
+        **action_kwargs,
     ):
         self.proceed = proceed
         self.around_action = action
@@ -77,6 +79,7 @@ class Around:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
+            print(f"AROUND: {args} {kwargs}")
             proceed = self.proceed
             if callable(proceed):
                 proceed = proceed(func)

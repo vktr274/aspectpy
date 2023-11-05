@@ -29,7 +29,7 @@ class Aspect(type):
 
             if cls.after_throwing_regexp.match(attr_name):
                 namespace[attr_name] = AfterThrowing(
-                    (cls.action, (ValueError,)), "after throwing", 3, 4
+                    ValueError, cls.action, "after throwing", 3, 4
                 )(stored_value)
                 stored_value = namespace[attr_name]
 
