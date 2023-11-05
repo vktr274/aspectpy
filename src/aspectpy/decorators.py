@@ -43,7 +43,6 @@ class Before:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            print(f"BEFORE: {args} {kwargs}")
             args = mutate_args(args, self.args_update)
             kwargs = mutate_kwargs(kwargs, self.kwargs_update)
             self.action(*self.action_args, **self.action_kwargs)
@@ -70,7 +69,6 @@ class AfterReturning:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            print(f"AFTER RET: {args} {kwargs}")
             args = mutate_args(args, self.args_update)
             kwargs = mutate_kwargs(kwargs, self.kwargs_update)
             result = func(*args, **kwargs)
@@ -103,7 +101,6 @@ class AfterThrowing:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            print(f"AFTER THROW: {args} {kwargs}")
             args = mutate_args(args, self.args_update)
             kwargs = mutate_kwargs(kwargs, self.kwargs_update)
             try:
@@ -134,7 +131,6 @@ class Around:
     def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            print(f"AROUND: {args} {kwargs}")
             proceed = self.proceed
             if callable(proceed):
                 proceed = proceed(func)
