@@ -1,3 +1,4 @@
+from typing import Any, Callable
 from aspectpy.decorators import Before, AfterReturning, AfterThrowing, Around
 from inspect import get_annotations, getargs
 import re
@@ -44,12 +45,12 @@ class Aspect(type):
         return super().__new__(cls, name, bases, namespace)
 
     @staticmethod
-    def action(arg1, arg2, arg3):
+    def action(arg1: Any, arg2: Any, arg3: Any) -> float:
         print(f"Doing something {arg1} with args: '{arg2}' and '{arg3}'")
         return 0.1
 
     @staticmethod
-    def proceed(func):
+    def proceed(func: Callable[..., Any]) -> bool:
         args = getargs(func.__code__).args
         return_type = get_annotations(func).get("return", None)
         print(

@@ -1,14 +1,14 @@
-from typing import Callable, Type
+from typing import Any, Callable, Type
 from functools import wraps
 
 
 class Before:
-    def __init__(self, action: Callable, *action_args, **action_kwargs):
+    def __init__(self, action: Callable[..., Any], *action_args, **action_kwargs):
         self.action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
-    def __call__(self, func: Callable):
+    def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
             self.action(*self.action_args, **self.action_kwargs)
@@ -18,12 +18,12 @@ class Before:
 
 
 class AfterReturning:
-    def __init__(self, action: Callable, *action_args, **action_kwargs):
+    def __init__(self, action: Callable[..., Any], *action_args, **action_kwargs):
         self.action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
-    def __call__(self, func: Callable):
+    def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
             result = func(*args, **kwargs)
@@ -36,7 +36,8 @@ class AfterReturning:
 class AfterThrowing:
     def __init__(
         self,
-        action_and_exceptions: tuple[Callable, tuple[Type[Exception]]] | Callable,
+        action_and_exceptions: tuple[Callable[..., Any], tuple[Type[Exception]]]
+        | Callable[..., Any],
         *action_args,
         **action_kwargs
     ):
@@ -49,7 +50,7 @@ class AfterThrowing:
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
-    def __call__(self, func: Callable):
+    def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
@@ -63,8 +64,8 @@ class AfterThrowing:
 class Around:
     def __init__(
         self,
-        proceed: bool | Callable[[Callable], bool],
-        action: Callable,
+        proceed: bool | Callable[[Callable[..., Any]], bool],
+        action: Callable[..., Any],
         *action_args,
         **action_kwargs
     ):
@@ -73,7 +74,7 @@ class Around:
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
-    def __call__(self, func: Callable):
+    def __call__(self, func: Callable[..., Any]):
         @wraps(func)
         def wrapper(*args, **kwargs):
             proceed = self.proceed
