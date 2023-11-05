@@ -1,4 +1,4 @@
-from aspectpy.decorators import Before
+from decorators import Before
 from typing import Any
 import re
 
