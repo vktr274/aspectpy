@@ -6,7 +6,7 @@ def action(num: int, text: str | None = None):
     print(f"{num}. action {text}")
 
 
-@Before(action, 1, text="before")
+@Before(None, None, action, 1, text="before")
 def test_before(test_text: str):
     """
     This docstring will be returned by test_before.__doc__
@@ -16,7 +16,7 @@ def test_before(test_text: str):
     return test_text
 
 
-@AfterReturning(action, 2, text="after returning")
+@AfterReturning(None, None, action, 2, text="after returning")
 def test_after_returning(test_text: str):
     """
     This docstring will be returned by test_after_returning.__doc__
@@ -26,8 +26,15 @@ def test_after_returning(test_text: str):
     return test_text
 
 
-@AfterThrowing(None, action, 3, text="after throwing")
-def test_after_throwing(test_text: str, throw: bool = True):
+@AfterThrowing(
+    {0: "SUSPICIOUS and MODIFIED"},
+    None,
+    None,
+    action,
+    3,
+    text="after throwing",
+)
+def test_after_throwing(test_text: str, throw: bool = False):
     """
     This docstring will be returned by test_after_throwing.__doc__
     because of @wraps(func) used in decorators.py
@@ -56,8 +63,8 @@ def around_action(arg):
     return "new return value"
 
 
-@Around(proceed, around_action, 15)
-def test_around(test_text: str):
+@Around(None, None, proceed, around_action, 15)
+def test_around(test_text: str = "default"):
     """
     This docstring will be returned by test_around.__doc__
     because of @wraps(func) used in decorators.py
@@ -138,7 +145,7 @@ print(f"__doc__: {test_after_throwing.__doc__}\n")
 
 print("------------------------AROUND------------------------")
 
-print(f"Return value: {test_around('cool')}")
+print(f"Return value: {test_around()}")
 
 print(f"__name__: {test_around.__name__}")
 

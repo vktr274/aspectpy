@@ -18,23 +18,27 @@ class Aspect(type):
                 continue
 
             if cls.before_regexp.match(attr_name):
-                namespace[attr_name] = Before(cls.action, "before", 1, 2)(stored_value)
+                namespace[attr_name] = Before(None, None, cls.action, "before", 1, 2)(
+                    stored_value
+                )
                 stored_value = namespace[attr_name]
 
             if cls.after_returning_regexp.match(attr_name):
                 namespace[attr_name] = AfterReturning(
-                    cls.action, "after returning", 2, 3
+                    None, None, cls.action, "after returning", 2, 3
                 )(stored_value)
                 stored_value = namespace[attr_name]
 
             if cls.after_throwing_regexp.match(attr_name):
                 namespace[attr_name] = AfterThrowing(
-                    ValueError, cls.action, "after throwing", 3, 4
+                    None, None, ValueError, cls.action, "after throwing", 3, 4
                 )(stored_value)
                 stored_value = namespace[attr_name]
 
             if cls.around_regexp.match(attr_name):
                 namespace[attr_name] = Around(
+                    None,
+                    None,
                     cls.proceed,
                     cls.action,
                     "around",
