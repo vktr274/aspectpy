@@ -2,11 +2,11 @@ from typing import Any, Callable, Type
 from functools import wraps
 
 
-def update_kwargs(kwargs: dict[str, Any], new_kwargs: dict[str, Any]) -> dict[str, Any]:
+def mutate_kwargs(kwargs: dict[str, Any], new_kwargs: dict[str, Any]) -> dict[str, Any]:
     return kwargs | new_kwargs
 
 
-def update_args(args: tuple[Any, ...], new_args: dict[int, Any]) -> tuple[Any, ...]:
+def mutate_args(args: tuple[Any, ...], new_args: dict[int, Any]) -> tuple[Any, ...]:
     mutable_args = list(args)
     for key, value in new_args.items():
         mutable_args[key] = value
