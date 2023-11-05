@@ -56,7 +56,7 @@ class AfterThrowing:
             try:
                 return func(*args, **kwargs)
             except self.exceptions:
-                self.action(*self.action_args, **self.action_kwargs)
+                return self.action(*self.action_args, **self.action_kwargs)
 
         return wrapper
 
