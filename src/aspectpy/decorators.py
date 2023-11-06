@@ -151,7 +151,7 @@ class Around:
         self.args_update = args_update
         self.kwargs_update = kwargs_update
         self.proceed = proceed
-        self.around_action = action
+        self.action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
 
@@ -165,6 +165,6 @@ class Around:
                 args = mutate_args(args, self.args_update)
                 kwargs = mutate_kwargs(kwargs, self.kwargs_update)
                 return func(*args, **kwargs)
-            return self.around_action(*self.action_args, **self.action_kwargs)
+            return self.action(*self.action_args, **self.action_kwargs)
 
         return wrapper
