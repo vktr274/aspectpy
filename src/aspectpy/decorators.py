@@ -93,16 +93,17 @@ class AfterReturning:
         self.action_kwargs = action_kwargs
 
     def __call__(self, func: Callable[..., Any]):
+        if not getattr(self.action, FLAG_CHECKED, False):
+            raise ValueError(
+                f"Function {self.action.__qualname__} is not decorated "
+                + f"with @{after_returning_check.__name__}",
+            )
+
         @wraps(func)
         def wrapper(*args, **kwargs):
             args = mutate_args(args, self.args_update)
             kwargs = mutate_kwargs(kwargs, self.kwargs_update)
             result = func(*args, **kwargs)
-            if not getattr(self.action, FLAG_CHECKED, False):
-                raise ValueError(
-                    f"Function {self.action.__name__} is not decorated "
-                    + f"with @{after_returning_check.__name__}",
-                )
             return self.action(result, *self.action_args, **self.action_kwargs)
 
         return wrapper
