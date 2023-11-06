@@ -114,6 +114,10 @@ class MyClass(metaclass=Aspect):
         print("TEST 9: Doing something like throwing a ConnectionError")
         raise ConnectionError("ConnectionError thrown")
 
+    def test10(self):
+        print("TEST 10: Doing something like throwing a NotImplementedError")
+        raise NotImplementedError("NotImplementedError thrown")
+
 
 print("------------------------BEFORE------------------------")
 
@@ -165,5 +169,6 @@ print(f"Return value: {my_class.test7(4555)}\n")
 print(f"Return value: {my_class.test_7()}\n")
 print(f"Return value: {my_class.test8()}\n")
 print(f"Return value: {my_class.test9()}\n")
+print(f"Return value: {my_class.test10()}\n")
 
 print("------------------------END---------------------------")

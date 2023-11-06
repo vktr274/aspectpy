@@ -8,7 +8,7 @@ class Aspect(type):
     before_regexp = re.compile(r"^test[1-3]$")
     after_returning_regexp = re.compile(r"^test[4-6]$")
     around_regexp = re.compile(r"^test[_]?7$")
-    after_throwing_regexp = re.compile(r"^test[8,9]$")
+    after_throwing_regexp = re.compile(r"^test([8,9]|10)$")
 
     def __new__(cls, name, bases, namespace):
         # Modify the class using wrappers
@@ -31,7 +31,13 @@ class Aspect(type):
 
             if cls.after_throwing_regexp.match(attr_name):
                 namespace[attr_name] = AfterThrowing(
-                    None, None, ValueError, cls.action, "after throwing", 3, 4
+                    None,
+                    None,
+                    (ConnectionError, ValueError),
+                    cls.action,
+                    "after throwing",
+                    3,
+                    4,
                 )(stored_value)
                 stored_value = namespace[attr_name]
 

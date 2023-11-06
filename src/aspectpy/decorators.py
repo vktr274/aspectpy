@@ -88,12 +88,9 @@ class AfterThrowing:
         *action_args,
         **action_kwargs,
     ):
-        if exceptions is None:
-            self.exceptions = (Exception,)
-        elif not isinstance(exceptions, tuple):
-            self.exceptions = (exceptions,)
         self.args_update = args_update
         self.kwargs_update = kwargs_update
+        self.exceptions = exceptions or Exception
         self.action = action
         self.action_args = action_args
         self.action_kwargs = action_kwargs
