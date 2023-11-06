@@ -17,5 +17,5 @@ class B(metaclass=A):
 
 b = B(10)
 
-print(f"The new b.num from metaclass is {b.num}")
+print(f"b.num from B.__init__ is {b.num}")
 print(f"Class B has a squared method outputting {b.squared()}")  # type: ignore
