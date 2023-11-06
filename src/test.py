@@ -1,9 +1,22 @@
-from aspectpy.decorators import Before, AfterReturning, AfterThrowing, Around
+from typing import Any
+from aspectpy.decorators import (
+    Before,
+    AfterReturning,
+    AfterThrowing,
+    Around,
+    after_returning_check,
+)
 from aspectpy.meta import Aspect
 
 
+@after_returning_check
+def action_after_returning(_RETURNED_VAL_: Any, num: int, text: str | None = None):
+    print(f"ACTION {num}: with text {text} and return value {_RETURNED_VAL_}")
+    return _RETURNED_VAL_ * 2
+
+
 def action(num: int, text: str | None = None):
-    print(f"{num}. action {text}")
+    print(f"ACTION {num}: with text {text}")
 
 
 @Before(None, None, action, 1, text="before")
@@ -16,7 +29,7 @@ def test_before(test_text: str):
     return test_text
 
 
-@AfterReturning(None, None, action, 2, text="after returning")
+@AfterReturning(None, None, action_after_returning, 2, text="after returning")
 def test_after_returning(test_text: str):
     """
     This docstring will be returned by test_after_returning.__doc__
@@ -48,7 +61,7 @@ def test_after_throwing(test_text: str, throw: bool = False):
 
 
 def proceed(func) -> bool:
-    print(f"Function {func.__name__} will not proceed")
+    print(f"PROCEED: Function {func.__name__} will not proceed")
     return False
 
 

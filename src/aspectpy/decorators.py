@@ -1,5 +1,31 @@
+from inspect import signature
 from typing import Any, Callable, Type
 from functools import wraps
+
+FLAG_CHECKED = "_AFTER_RETURNING_CHECKED_"
+
+
+def after_returning_check(func: Callable[..., Any]):
+    setattr(func, FLAG_CHECKED, True)
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        sig = signature(func)
+        arg_name = "_RETURNED_VAL_"
+
+        if not sig.parameters:
+            raise ValueError(
+                f"Function {func.__name__} has no parameters. Missing '{arg_name}' argument at index 0."
+            )
+
+        if arg_name not in sig.parameters:
+            raise ValueError(
+                f"Function {func.__name__} is missing '{arg_name}' argument at index 0."
+            )
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def mutate_kwargs(
@@ -72,8 +98,11 @@ class AfterReturning:
             args = mutate_args(args, self.args_update)
             kwargs = mutate_kwargs(kwargs, self.kwargs_update)
             result = func(*args, **kwargs)
-            self.action(*self.action_args, **self.action_kwargs)
-            return result
+            if not getattr(self.action, FLAG_CHECKED, False):
+                raise ValueError(
+                    f"Function {self.action.__name__} is not decorated with @after_returning_check"
+                )
+            return self.action(result, *self.action_args, **self.action_kwargs)
 
         return wrapper
 

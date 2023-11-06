@@ -1,5 +1,11 @@
 from typing import Any, Callable
-from aspectpy.decorators import Before, AfterReturning, AfterThrowing, Around
+from aspectpy.decorators import (
+    Before,
+    AfterReturning,
+    AfterThrowing,
+    Around,
+    after_returning_check,
+)
 from inspect import get_annotations, getargs
 import re
 
@@ -25,7 +31,7 @@ class Aspect(type):
 
             if cls.after_returning_regexp.match(attr_name):
                 namespace[attr_name] = AfterReturning(
-                    None, None, cls.action, "after returning", 2, 3
+                    None, None, cls.action_after_returning, "after returning", 2, 3
                 )(stored_value)
                 stored_value = namespace[attr_name]
 
@@ -56,14 +62,23 @@ class Aspect(type):
 
     @staticmethod
     def action(arg1: Any, arg2: Any, arg3: Any) -> float:
-        print(f"Doing something {arg1} with args: '{arg2}' and '{arg3}'")
+        print(f"ACTION: Doing something {arg1} with args: '{arg2}' and '{arg3}'")
         return 0.1
+
+    @staticmethod
+    @after_returning_check
+    def action_after_returning(
+        _RETURNED_VAL_: Any, arg1: Any, arg2: Any, arg3: Any
+    ) -> Any:
+        print(f"ACTION: Doing something {arg1} with args: '{arg2}' and '{arg3}'")
+        print(f"ACTION: Doubling the returned value: {_RETURNED_VAL_}")
+        return _RETURNED_VAL_ * 2
 
     @staticmethod
     def proceed(func: Callable[..., Any]) -> bool:
         args = getargs(func.__code__).args
         return_type = get_annotations(func).get("return", None)
         print(
-            f"Evaluating whether to proceeed with args: {args} and return type: {return_type}"
+            f"PROCEED: Evaluating whether to proceeed with args: {args} and return type: {return_type}"
         )
         return return_type == str and "number" in args
