@@ -100,7 +100,8 @@ class AfterReturning:
             result = func(*args, **kwargs)
             if not getattr(self.action, FLAG_CHECKED, False):
                 raise ValueError(
-                    f"Function {self.action.__name__} is not decorated with @{after_returning_check.__name__}"
+                    f"Function {self.action.__name__} is not decorated "
+                    + f"with @{after_returning_check.__name__}",
                 )
             return self.action(result, *self.action_args, **self.action_kwargs)
 
