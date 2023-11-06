@@ -6,7 +6,7 @@ from aspectpy.decorators import (
     Around,
     after_returning_check,
 )
-from inspect import get_annotations, getargs
+from inspect import signature
 import re
 
 
@@ -76,9 +76,10 @@ class Aspect(type):
 
     @staticmethod
     def proceed(func: Callable[..., Any]) -> bool:
-        args = getargs(func.__code__).args
-        return_type = get_annotations(func).get("return", None)
+        sig = signature(func)
+        params = sig.parameters.keys()
+        return_type = sig.return_annotation
         print(
-            f"PROCEED: Evaluating whether to proceeed with args: {args} and return type: {return_type}"
+            f"PROCEED: Evaluating whether to proceeed with params: {params} and return type: {return_type}"
         )
-        return return_type == str and "number" in args
+        return return_type == str and "number" in params
