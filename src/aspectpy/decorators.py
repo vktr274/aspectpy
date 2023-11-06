@@ -15,12 +15,12 @@ def after_returning_check(func: Callable[..., Any]):
 
         if not sig.parameters:
             raise ValueError(
-                f"Function {func.__name__} has no parameters. Missing '{arg_name}' argument at index 0."
+                f"{func.__qualname__} has no parameters. Missing '{arg_name}' argument at index 0."
             )
 
         if arg_name not in sig.parameters:
             raise ValueError(
-                f"Function {func.__name__} is missing '{arg_name}' argument at index 0."
+                f"{func.__qualname__} is missing '{arg_name}' argument at index 0."
             )
 
         return func(*args, **kwargs)
@@ -86,6 +86,11 @@ class AfterReturning:
         *action_args,
         **action_kwargs,
     ):
+        if not getattr(action, FLAG_CHECKED, False):
+            raise ValueError(
+                f"{action.__qualname__} is not decorated "
+                + f"with @{after_returning_check.__name__}",
+            )
         self.args_update = args_update
         self.kwargs_update = kwargs_update
         self.action = action
@@ -93,12 +98,6 @@ class AfterReturning:
         self.action_kwargs = action_kwargs
 
     def __call__(self, func: Callable[..., Any]):
-        if not getattr(self.action, FLAG_CHECKED, False):
-            raise ValueError(
-                f"Function {self.action.__qualname__} is not decorated "
-                + f"with @{after_returning_check.__name__}",
-            )
-
         @wraps(func)
         def wrapper(*args, **kwargs):
             args = mutate_args(args, self.args_update)
