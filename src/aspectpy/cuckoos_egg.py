@@ -15,6 +15,8 @@ def safer_payment_method(name, change=False):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
                 if change:
+                    if name not in registry:
+                        raise ValueError(f"Class {name} not found in registry.")
                     self.__class__ = registry[name]
                 else:
                     self.__class__ = cls
