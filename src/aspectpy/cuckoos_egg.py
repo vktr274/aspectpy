@@ -1,18 +1,27 @@
 from abc import ABCMeta, abstractmethod
 
 
-class SaferPaymentMethod:
-    def __init__(self, new_cls: type, change: bool):
-        self.new_cls = new_cls
-        self.change = change
+registry = {}
 
-    def __call__(self, cls: type):
-        def wrapper(*args, **kwargs):
-            if not self.change:
-                return cls(*args, **kwargs)
-            return self.new_cls(*args, **kwargs)
 
-        return wrapper
+def register(cls):
+    registry[cls.__name__] = cls
+    return cls
+
+
+def safer_payment_method(name, change=False):
+    def decorator(cls):
+        class Wrapper(cls):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                if change:
+                    self.__class__ = registry[name]
+                else:
+                    self.__class__ = cls
+
+        return Wrapper
+
+    return decorator
 
 
 class Payment(metaclass=ABCMeta):
@@ -25,16 +34,7 @@ class Payment(metaclass=ABCMeta):
         pass
 
 
-# Cannot be a subclass of OnlineCard due to Python's MRO
-class PayPal(Payment):
-    def pay(self, amount: int):
-        print(f"PayPal payment of {amount}$ processed.")
-
-    def refund(self, amount: int):
-        print(f"PayPal refund of {amount}$ processed.")
-
-
-@SaferPaymentMethod(PayPal, change=True)
+@safer_payment_method("PayPal", change=True)
 class OnlineCard(Payment):
     def pay(self, amount: int):
         print(f"Online card payment of {amount}$ processed.")
@@ -43,9 +43,18 @@ class OnlineCard(Payment):
         print(f"Online card refund of {amount}$ processed.")
 
 
+@register
+class PayPal(OnlineCard):
+    def pay(self, amount: int):
+        print(f"PayPal payment of {2 * amount}$ processed.")
+
+    def refund(self, amount: int):
+        print(f"PayPal refund of {2 * amount}$ processed.")
+
+
 online_card = OnlineCard()
 
 online_card.pay(100)
 online_card.refund(100)
 
-print(online_card.__class__.__name__)
+print(online_card.__class__)
