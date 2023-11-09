@@ -4,7 +4,7 @@ from aspectpy.decorators import (
     AfterReturning,
     AfterThrowing,
     Around,
-    after_returning_arg_check,
+    after_returning_action_arg_check,
 )
 from inspect import signature
 import re
@@ -66,7 +66,7 @@ class Aspect(type):
         return 0.1
 
     @staticmethod
-    @after_returning_arg_check
+    @after_returning_action_arg_check
     def action_after_returning(
         _RETURNED_VAL_: Any, arg1: Any, arg2: Any, arg3: Any
     ) -> Any:

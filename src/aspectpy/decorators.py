@@ -5,7 +5,7 @@ from functools import wraps
 FLAG_CHECKED = "_AFTER_RETURNING_CHECKED_"
 
 
-def after_returning_arg_check(func: Callable[..., Any]):
+def after_returning_action_arg_check(func: Callable[..., Any]):
     """
     Decorator that checks if the action to be used in AfterReturning
     has the correct signature, i.e. has a parameter named "_RETURNED_VAL_".
@@ -17,7 +17,7 @@ def after_returning_arg_check(func: Callable[..., Any]):
     """
     if hasattr(func, FLAG_CHECKED) and getattr(func, FLAG_CHECKED):
         raise ValueError(
-            f"{func.__qualname__} is already decorated with @{after_returning_arg_check.__name__}"
+            f"{func.__qualname__} is already decorated with @{after_returning_action_arg_check.__name__}"
         )
     setattr(func, FLAG_CHECKED, True)
 
@@ -146,7 +146,7 @@ class AfterReturning:
         if not getattr(action, FLAG_CHECKED, False):
             raise ValueError(
                 f"{action.__qualname__} is not decorated "
-                + f"with @{after_returning_arg_check.__name__}",
+                + f"with @{after_returning_action_arg_check.__name__}",
             )
         self.args_update = args_update
         self.kwargs_update = kwargs_update
