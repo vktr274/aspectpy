@@ -24,20 +24,19 @@ class Aspect(type):
                 continue
 
             if cls.before_regexp.match(attr_name):
-                namespace[attr_name] = Before(None, None, cls.action, "before", 1, 2)(
+                namespace[attr_name] = Before(None, cls.action, "before", 1, 2)(
                     stored_value
                 )
                 stored_value = namespace[attr_name]
 
             if cls.after_returning_regexp.match(attr_name):
                 namespace[attr_name] = AfterReturning(
-                    None, None, cls.action_after_returning, "after returning", 2, 3
+                    None, cls.action_after_returning, "after returning", 2, 3
                 )(stored_value)
                 stored_value = namespace[attr_name]
 
             if cls.after_throwing_regexp.match(attr_name):
                 namespace[attr_name] = AfterThrowing(
-                    None,
                     None,
                     (ConnectionError, ValueError),
                     cls.action,
@@ -49,7 +48,6 @@ class Aspect(type):
 
             if cls.around_regexp.match(attr_name):
                 namespace[attr_name] = Around(
-                    None,
                     None,
                     cls.proceed,
                     cls.action,

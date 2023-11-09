@@ -19,7 +19,7 @@ def action(num: int, text: str | None = None):
     print(f"ACTION {num}: with text {text}")
 
 
-@Before(None, None, action, 1, text="before")
+@Before(None, action, 1, text="before")
 def test_before(test_text: str):
     """
     This docstring will be returned by test_before.__doc__
@@ -29,7 +29,7 @@ def test_before(test_text: str):
     return test_text
 
 
-@AfterReturning(None, None, action_after_returning, 2, text="after returning")
+@AfterReturning(None, action_after_returning, 2, text="after returning")
 def test_after_returning(test_text: str):
     """
     This docstring will be returned by test_after_returning.__doc__
@@ -40,20 +40,19 @@ def test_after_returning(test_text: str):
 
 
 @AfterThrowing(
-    {0: "SUSPICIOUS and MODIFIED"},
-    None,
+    {"test_text": "SUSPICIOUS and MODIFIED", "num": 3},
     None,
     action,
     3,
     text="after throwing",
 )
-def test_after_throwing(test_text: str, throw: bool = False):
+def test_after_throwing(test_text: str, throw: bool = False, num: int = 0):
     """
     This docstring will be returned by test_after_throwing.__doc__
     because of @wraps(func) used in decorators.py
     """
     print(
-        f"TEST_AFTER_THROWING: Doing something {test_text} that might throw an exception"
+        f"TEST_AFTER_THROWING: Doing something {test_text} with {num} that might throw an exception"
     )
     if throw:
         raise Exception("Exception thrown")
@@ -76,7 +75,7 @@ def around_action(arg):
     return "new return value"
 
 
-@Around(None, None, proceed, around_action, 15)
+@Around(None, proceed, around_action, 15)
 def test_around(test_text: str = "default"):
     """
     This docstring will be returned by test_around.__doc__
