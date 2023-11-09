@@ -6,6 +6,10 @@ FLAG_CHECKED = "_AFTER_RETURNING_CHECKED_"
 
 
 def after_returning_check(func: Callable[..., Any]):
+    if hasattr(func, FLAG_CHECKED) and getattr(func, FLAG_CHECKED):
+        raise ValueError(
+            f"{func.__qualname__} is already decorated with @{after_returning_check.__name__}"
+        )
     setattr(func, FLAG_CHECKED, True)
 
     @wraps(func)
