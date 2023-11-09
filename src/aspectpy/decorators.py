@@ -53,7 +53,13 @@ def mutate_params(
     func_signature: Signature,
 ) -> tuple[tuple[Any, ...], dict[str, Any]]:
     """
-    Mutates the `args` and `kwargs` with the new parameters.
+    Mutates the `args` and `kwargs` with the new parameters. If the update is
+    executed, the `args` tuple gets emptied and the `kwargs` dictionary gets
+    filled with all the updated, new or original parameters if some are missing
+    from the `new_params` dictionary. Effectively, this decision does not affect
+    code functionality, but rather is just a design choice. It allows for the
+    `args` and `kwargs` to be updated by name and the result is that every parameter
+    becomes a keyword argument.
 
     Parameters:
         - `args`: The original args.
