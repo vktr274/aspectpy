@@ -4,12 +4,12 @@ from aspectpy.decorators import (
     AfterReturning,
     AfterThrowing,
     Around,
-    after_returning_action_arg_check,
+    validate_after_returning_action,
 )
 from aspectpy.meta import Aspect
 
 
-@after_returning_action_arg_check
+@validate_after_returning_action
 def action_after_returning(_RETURNED_VAL_: Any, num: int, text: str | None = None):
     print(f"ACTION {num}: with text {text} and return value {_RETURNED_VAL_}")
     return _RETURNED_VAL_ * 2

@@ -2,10 +2,10 @@ from inspect import Signature, signature
 from typing import Any, Callable, Type
 from functools import wraps
 
-FLAG_CHECKED = "_AFTER_RETURNING_CHECKED_"
+FLAG_VALIDATED = "_AFTER_RETURNING_ACTION_VALIDATED_"
 
 
-def after_returning_action_arg_check(func: Callable[..., Any]):
+def validate_after_returning_action(func: Callable[..., Any]):
     """
     Decorator that checks if the action to be used in `AfterReturning`
     has the correct signature, i.e. has a parameter named `_RETURNED_VAL_`.
@@ -18,13 +18,13 @@ def after_returning_action_arg_check(func: Callable[..., Any]):
 
     Raises:
         - `ValueError`: If the action does not have a parameter named `_RETURNED_VAL_`.
-        - `ValueError`: If the action is already decorated with `@after_returning_action_arg_check`.
+        - `ValueError`: If the action is already decorated with this decorator.
     """
-    if hasattr(func, FLAG_CHECKED) and getattr(func, FLAG_CHECKED):
+    if hasattr(func, FLAG_VALIDATED) and getattr(func, FLAG_VALIDATED):
         raise ValueError(
-            f"{func.__qualname__} is already decorated with @{after_returning_action_arg_check.__name__}"
+            f"{func.__qualname__} is already decorated with @{validate_after_returning_action.__name__}"
         )
-    setattr(func, FLAG_CHECKED, True)
+    setattr(func, FLAG_VALIDATED, True)
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -148,7 +148,7 @@ class AfterReturning:
         - `action`: The action to be executed after the decorated function is called and returns.
 
             This action must have a parameter named `_RETURNED_VAL_` and must be decorated with
-            `@after_returning_arg_check`.
+            `@validate_after_returning_action`.
 
         - `action_args`: The args to be passed to the action.
         - `action_kwargs`: The kwargs to be passed to the action.
@@ -164,10 +164,10 @@ class AfterReturning:
         *action_args,
         **action_kwargs,
     ):
-        if not getattr(action, FLAG_CHECKED, False):
+        if not getattr(action, FLAG_VALIDATED, False):
             raise ValueError(
                 f"{action.__qualname__} is not decorated "
-                + f"with @{after_returning_action_arg_check.__name__}",
+                + f"with @{validate_after_returning_action.__name__}",
             )
         self.params_update = params_update
         self.action = action
