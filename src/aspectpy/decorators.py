@@ -295,7 +295,7 @@ class Around:
         `new_params[arg_name] = value` and `new_params[kwarg_name] = value`
         respectively.
 
-    proceed : bool or callable
+    proceed : bool or Callable
         The proceed condition. Can be a boolean or a callable that returns a boolean.
 
     action : Callable
