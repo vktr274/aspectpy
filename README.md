@@ -8,11 +8,11 @@ The goal is to make the implementation of these advice as customizable as possib
 
 ## Documentation
 
-## Before Advice
+### Before Advice
 
 The `Before` decorator factory class is used to implement the `before()` advice.
 
-### Constructor of `Before`
+#### Constructor of `Before`
 
 The constructor for the `Before` class takes in the following parameters:
 
@@ -21,7 +21,7 @@ The constructor for the `Before` class takes in the following parameters:
 - action_args (tuple): The arguments to be passed to the action.
 - action_kwargs (dict): The keyword arguments to be passed to the action.
 
-### Example Usage of `Before`
+#### Example Usage of `Before`
 
 ```python
 from aspectpy import Before
@@ -42,11 +42,11 @@ original_function(10)
 #  "original_function(15, original_y)"
 ```
 
-## After Returning Advice
+### After Returning Advice
 
 The `AfterReturning` decorator factory class is used to implement the `after() returning` advice.
 
-### Constructor of `AfterReturning`
+#### Constructor of `AfterReturning`
 
 The constructor for the `AfterReturning` class takes in the following parameters:
 
@@ -55,7 +55,7 @@ The constructor for the `AfterReturning` class takes in the following parameters
 - action_args (tuple): The arguments to be passed to the action.
 - action_kwargs (dict): The keyword arguments to be passed to the action.
 
-### Example Usage of `AfterReturning`
+#### Example Usage of `AfterReturning`
 
 ```python
 from aspectpy import AfterReturning, validate_after_returning_action
@@ -79,11 +79,11 @@ original_function(10)
 #  "action(returned_val)"
 ```
 
-## After Throwing Advice
+### After Throwing Advice
 
 The `AfterThrowing` decorator factory class is used to implement the `after() throwing` advice.
 
-### Constructor of `AfterThrowing`
+#### Constructor of `AfterThrowing`
 
 The constructor for the `AfterThrowing` class takes in the following parameters:
 
@@ -93,7 +93,7 @@ The constructor for the `AfterThrowing` class takes in the following parameters:
 - action_args (tuple): The arguments to be passed to the action.
 - action_kwargs (dict): The keyword arguments to be passed to the action.
 
-### Example Usage of `AfterThrowing`
+#### Example Usage of `AfterThrowing`
 
 ```python
 from aspectpy import AfterThrowing
@@ -115,11 +115,11 @@ original_function(10)
 #  "Exception was thrown by original_function... Executing action!"
 ```
 
-## Around Advice
+### Around Advice
 
 The `Around` decorator factory class is used to implement the `around()` advice.
 
-### Constructor of `Around`
+#### Constructor of `Around`
 
 The constructor for the `Around` class takes in the following parameters:
 
@@ -129,7 +129,7 @@ The constructor for the `Around` class takes in the following parameters:
 - action_args (tuple): The arguments to be passed to the action.
 - action_kwargs (dict): The keyword arguments to be passed to the action.
 
-### Example Usage of `Around`
+#### Example Usage of `Around`
 
 ```python
 from aspectpy import Around
