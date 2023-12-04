@@ -44,7 +44,7 @@ def test_after_returning(test_text: str):
     None,
     action,
     3,
-    text="after throwing",
+    "after throwing",
 )
 def test_after_throwing(test_text: str, throw: bool = False, num: int = 0):
     """
@@ -149,11 +149,11 @@ print(f"__doc__: {test_after_returning.__doc__}\n")
 
 print("------------AFTER-THROWING-WITH-EXCEPTION-------------")
 
-print(f"Return value: {test_after_throwing('suspicious')}\n")
+print(f"Return value: {test_after_throwing('suspicious', throw=True)}\n")
 
 print("----------AFTER-THROWING-WITHOUT-EXCEPTION------------")
 
-print(f"Return value: {test_after_throwing('suspicious', throw=False)}")
+print(f"Return value: {test_after_throwing('suspicious')}")
 
 print(f"__name__: {test_after_throwing.__name__}")
 

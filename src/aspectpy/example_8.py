@@ -14,7 +14,7 @@ class Aspect(type):
                 continue
 
             if cls.before_regexp.match(attr_name):
-                namespace[attr_name] = Before(None, None, cls.action, "before", 1, 2)(
+                namespace[attr_name] = Before(None, cls.action, "before", 1, 2)(
                     attr_value
                 )
 
