@@ -24,7 +24,7 @@ The constructor for the `Before` class takes in the following parameters:
 #### Example Usage of `Before`
 
 ```python
-from aspectpy import Before
+from aspectpy.decorators import Before
 
 
 def action(a, b="example"):
@@ -58,7 +58,7 @@ The constructor for the `AfterReturning` class takes in the following parameters
 #### Example Usage of `AfterReturning`
 
 ```python
-from aspectpy import AfterReturning, validate_after_returning_action
+from aspectpy.decorators import AfterReturning, validate_after_returning_action
 
 
 @validate_after_returning_action
@@ -96,7 +96,7 @@ The constructor for the `AfterThrowing` class takes in the following parameters:
 #### Example Usage of `AfterThrowing`
 
 ```python
-from aspectpy import AfterThrowing
+from aspectpy.decorators import AfterThrowing
 
 
 def action():
@@ -132,7 +132,7 @@ The constructor for the `Around` class takes in the following parameters:
 #### Example Usage of `Around`
 
 ```python
-from aspectpy import Around
+from aspectpy.decorators import Around
 
 
 def action():
