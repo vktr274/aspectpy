@@ -110,13 +110,13 @@ class MyClass(metaclass=Aspect):
         print("TEST 6: Doing something")
         return 7
 
-    def test7(self, number) -> str:
-        print(f"TEST 7 STR: Doing something with arg: {number}")
+    def test7(self, number, x: Any, y: Any=1) -> str:
+        print(f"TEST 7 STR: Doing something with args: {number}, {x} and {y}")
         return "8"
 
-    def test_7(self) -> str:
+    def test_7(self) -> int:
         print("TEST_7 INT: Doing something")
-        return "8"
+        return 8
 
     def test8(self):
         print("TEST 8: Doing something like throwing a ValueError")
@@ -177,7 +177,7 @@ print(f"Return value: {my_class.test3()}\n")
 print(f"Return value: {my_class.test4()}\n")
 print(f"Return value: {my_class.test5()}\n")
 print(f"Return value: {my_class.test6()}\n")
-print(f"Return value: {my_class.test7(4555)}\n")
+print(f"Return value: {my_class.test7(4555, "x", y="y")}\n")
 print(f"Return value: {my_class.test_7()}\n")
 print(f"Return value: {my_class.test8()}\n")
 print(f"Return value: {my_class.test9()}\n")

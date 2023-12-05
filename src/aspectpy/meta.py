@@ -48,7 +48,7 @@ class Aspect(type):
 
             if cls.around_regexp.match(attr_name):
                 namespace[attr_name] = Around(
-                    None,
+                    {"number": 122, "y": None},
                     cls.proceed,
                     cls.action,
                     "around",
