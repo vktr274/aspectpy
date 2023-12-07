@@ -28,7 +28,7 @@ def validate_after_returning_action(func: Callable[..., Any]):
         If the action is already decorated with this decorator.
     """
 
-    if hasattr(func, FLAG_VALIDATED) and getattr(func, FLAG_VALIDATED):
+    if getattr(func, FLAG_VALIDATED, False):
         raise ValueError(
             f"{func.__qualname__} is already decorated with @{validate_after_returning_action.__name__}"
         )
