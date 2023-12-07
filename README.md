@@ -4,7 +4,7 @@ This project aims to replicate the functionality of AspectJ in Python. The chose
 
 The `before()` advice is implemented as a decorator factory class called `Before`. Similarly, the `after() returning` and `after() throwing` advice are implemented as `AfterReturning` and `AfterThrowing` decorator factory classes, respectively. The `around()` advice is implemented as a decorator factory class called `Around`.
 
-The goal is to make the implementation of these advice as customizable as possible.
+The goal is to make the implementation of these advice as customizable as possible. The advice are implemented in the [`decorators.py`](src/aspectpy/decorators.py) file.
 
 ## Documentation
 
@@ -147,3 +147,7 @@ original_function()
 # will print:
 #  "Executing action!"
 ```
+
+### Metaclass Example
+
+The [`meta.py`](src/aspectpy/meta.py) file contains an example of an aspect in the form of a metaclass. It makes use of regular expressions to match the names of methods to apply advice to. The aspect can then be applied to a class by using the `metaclass` keyword argument in the class definition. Such usage can be seen in the [`test.py`](src/test.py) file in the `MyClass` class.
