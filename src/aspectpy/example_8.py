@@ -10,13 +10,20 @@ class Aspect(type):
         # Modify the class using wrappers
         print(f"Modifying the namespace: {namespace}\n")
         for attr_name, attr_value in namespace.items():
-            if not callable(attr_value) or attr_name == "__init__":
+            if not callable(attr_value):
                 continue
 
-            if cls.before_regexp.match(attr_name):
-                namespace[attr_name] = Before(None, cls.action, "before", 1, 2)(
-                    attr_value
-                )
+            if attr_name == "__init__":
+                # Explicitly calling the decorator instance
+                namespace[attr_name] = Before(
+                    {"example": "modified_example"}, cls.action, "before __init__", 1, 2
+                )(attr_value)
+
+            elif cls.before_regexp.match(attr_name):
+                # Explicitly calling the decorator instance
+                namespace[attr_name] = Before(
+                    None, cls.action, f"before {attr_name}", 1, 2
+                )(attr_value)
 
         return super().__new__(cls, name, bases, namespace)
 
@@ -26,9 +33,9 @@ class Aspect(type):
 
 
 class MyClass(metaclass=Aspect):
-    def __init__(self):
-        self.example = "example"
-        print("INIT: Initializing MyClass\n")
+    def __init__(self, example):
+        self.example = example
+        print(f"INIT: Initializing MyClass with example = '{self.example}'")
 
     def test1(self):
         print("TEST 1: Doing something")
@@ -43,7 +50,7 @@ class MyClass(metaclass=Aspect):
         return 3
 
 
-my_class = MyClass()
+my_class = MyClass("example")
 print(f"Return value: {my_class.test1()}\n")
 print(f"Return value: {my_class.test2()}\n")
 print(f"Return value: {my_class.another_method()}")
