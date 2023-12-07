@@ -57,17 +57,16 @@ def validate_after_returning_action(func: Callable[..., Any]):
 def mutate_params(
     args: tuple[Any, ...],
     kwargs: dict[str, Any],
-    new_params: dict[str, Any] | None,
+    params_update: dict[str, Any] | None,
     func_signature: Signature,
 ) -> tuple[tuple[Any, ...], dict[str, Any]]:
     """
-    Mutates arguments and keyword arguments with new parameters. If the update is
+    Mutates arguments and keyword arguments with updated parameters. If the update is
     executed, the `args` tuple gets emptied, and the `kwargs` dictionary gets filled
-    with all the updated, new, or original parameters if some are missing from the
-    `new_params` dictionary. Effectively, this decision does not affect code
-    functionality, but rather is just a design choice. It allows for the arguments
-    and keyword arguments to be updated by name, and the result is that every parameter
-    becomes a keyword argument.
+    with all the updated or original parameters if some are missing from the `params_update`
+    dictionary. Effectively, this decision does not affect code functionality, but rather
+    is just a design choice. It allows for the arguments and keyword arguments to be
+    updated by name, and the result is that every parameter becomes a keyword argument.
 
     Parameters
     ----------
@@ -77,12 +76,12 @@ def mutate_params(
     kwargs : dict
         The original keyword arguments.
 
-    new_params : dict or None
-        Dictionary with key to value mappings representing new parameters.
+    params_update : dict or None
+        Dictionary with key to value mappings representing updates to parameters.
         If `None` or empty, the original parameters are used.
 
         Can include both arguments and keyword arguments as
-        `new_params[arg_name] = value` and `new_params[kwarg_name] = value`
+        `params_update[arg_name] = value` and `params_update[kwarg_name] = value`
         respectively.
 
     func_signature : Signature
@@ -94,7 +93,7 @@ def mutate_params(
         Tuple of arguments and keyword arguments after mutation.
     """
 
-    if new_params is None:
+    if params_update is None:
         return args, kwargs
 
     bound = func_signature.bind(*args, **kwargs)
@@ -102,8 +101,9 @@ def mutate_params(
     args = tuple()
     kwargs = bound.arguments
 
-    for key, value in new_params.items():
-        kwargs[key] = value
+    for key, value in params_update.items():
+        if key in kwargs:
+            kwargs[key] = value
     return args, kwargs
 
 
