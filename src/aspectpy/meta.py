@@ -11,6 +11,7 @@ import re
 
 
 class Aspect(type):
+    # Regular expressions used as pointcuts
     before_regexp = re.compile(r"^test[1-3]$")
     after_returning_regexp = re.compile(r"^test[4-6]$")
     around_regexp = re.compile(r"^test[_]?7$")
