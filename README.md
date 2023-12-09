@@ -4,7 +4,7 @@ This project aims to replicate the functionality of AspectJ in Python. The chose
 
 The `before()` advice is implemented as a decorator factory class called `Before`. Similarly, the `after() returning` and `after() throwing` advice are implemented as `AfterReturning` and `AfterThrowing` decorator factory classes, respectively. The `around()` advice is implemented as a decorator factory class called `Around`.
 
-The goal is to make the implementation of these advice as customizable as possible. The advice are implemented in the [`decorators.py`](src/aspectpy/decorators.py) file.
+The goal is to make the implementation of these advice as customizable as possible. The advice are implemented in the [`decorators.py`](src/aspectpy/decorators.py) file. The paper related to this project can be found in the repository as [`aspectpy_paper.pdf`](aspectpy_paper.pdf).
 
 ## Documentation
 
