@@ -4,10 +4,10 @@ import re
 
 
 class Aspect(type):
+    # Regular expression used as the pointcut
     before_regexp = re.compile(r"^test[1,2]$")
 
     def __new__(cls, name, bases, namespace):
-        # Modify the class using wrappers
         print(f"Modifying the namespace: {namespace}\n")
         for attr_name, attr_value in namespace.items():
             if not callable(attr_value):

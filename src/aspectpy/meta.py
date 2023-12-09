@@ -18,25 +18,27 @@ class Aspect(type):
     after_throwing_regexp = re.compile(r"^test([8,9]|10)$")
 
     def __new__(cls, name, bases, namespace):
-        # Modify the class using wrappers
         for attr_name, attr_value in namespace.items():
             stored_value = attr_value
             if not callable(attr_value) or attr_name == "__init__":
                 continue
 
             if cls.before_regexp.match(attr_name):
+                # Explicitly calling the decorator instance
                 namespace[attr_name] = Before(None, cls.action, "before", 1, 2)(
                     stored_value
                 )
                 stored_value = namespace[attr_name]
 
             if cls.after_returning_regexp.match(attr_name):
+                # Explicitly calling the decorator instance
                 namespace[attr_name] = AfterReturning(
                     None, cls.action_after_returning, "after returning", 2, 3
                 )(stored_value)
                 stored_value = namespace[attr_name]
 
             if cls.after_throwing_regexp.match(attr_name):
+                # Explicitly calling the decorator instance
                 namespace[attr_name] = AfterThrowing(
                     None,
                     (ConnectionError, ValueError),
@@ -48,6 +50,7 @@ class Aspect(type):
                 stored_value = namespace[attr_name]
 
             if cls.around_regexp.match(attr_name):
+                # Explicitly calling the decorator instance
                 namespace[attr_name] = Around(
                     {"number": 122, "y": None},
                     cls.proceed,
