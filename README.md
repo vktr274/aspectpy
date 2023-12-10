@@ -4,7 +4,7 @@ This project aims to replicate the functionality of AspectJ in Python. The chose
 
 The `before()` advice is implemented as a decorator factory class called `Before`. Similarly, the `after() returning` and `after() throwing` advice are implemented as `AfterReturning` and `AfterThrowing` decorator factory classes, respectively. The `around()` advice is implemented as a decorator factory class called `Around`.
 
-The goal is to make the implementation of these advice as customizable as possible. The advice are implemented in the [`decorators.py`](src/aspectpy/decorators.py) file. The paper related to this project can be found in the repository as [`aspectpy_paper.pdf`](aspectpy_paper.pdf).
+The goal is to make the implementation of these advice as customizable as possible. The advice are implemented in the [`decorators.py`](src/aspectpy/decorators.py) file. The paper related to this project can be found in the repository as [`aspectpy_paper.pdf`](modroczky_aspectpy_paper.pdf).
 
 ## Documentation
 
@@ -16,7 +16,7 @@ The `Before` decorator factory class is used to implement the `before()` advice.
 
 The constructor for the `Before` class takes in the following parameters:
 
-- params_update (dict or None): Dictionary with key to value mappings representing new parameters. If `None` or empty, the original parameters are used. Can include both arguments and keyword arguments as `new_params[arg_name] = value` and `new_params[kwarg_name] = value` respectively.
+- params_update (dict or None): Dictionary with key to value mappings representing new parameters. If `None` or empty, the original parameters are used. Can include both arguments and keyword arguments as `new_params[arg_name] = value` and `new_params[kwarg_name] = value` respectively. The function used to update the parameters is documented in the [`decorators.py`](src/aspectpy/decorators.py) file - it is named `mutate_params`.
 - action (Callable): The action to be executed before the decorated function is called.
 - action_args (tuple): The arguments to be passed to the action.
 - action_kwargs (dict): The keyword arguments to be passed to the action.
@@ -51,7 +51,7 @@ The `AfterReturning` decorator factory class is used to implement the `after() r
 The constructor for the `AfterReturning` class takes in the following parameters:
 
 - params_update (dict or None): Dictionary with key to value mappings representing new parameters. If `None` or empty, the original parameters are used. Can include both arguments and keyword arguments as `new_params[arg_name] = value` and `new_params[kwarg_name] = value` respectively.
-- action (Callable): The action to be executed after the decorated function is called and returns. This action must have a parameter named `_RETURNED_VAL_` and must be decorated with `@validate_after_returning_action`.
+- action (Callable): The action to be executed after the decorated function is called and returns. This action must have a parameter named `_RETURNED_VAL_` and must be decorated with `@validate_after_returning_action`. This decorator is documented in the [`decorators.py`](src/aspectpy/decorators.py) file.
 - action_args (tuple): The arguments to be passed to the action.
 - action_kwargs (dict): The keyword arguments to be passed to the action.
 
